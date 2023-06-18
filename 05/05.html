@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .leaflet-control-layers-toggle {
+      background-color: #ffffff;
+      /* Background color */
+      color: #333333;
+      /* Text color */
+      border: 3px solid #000000;
+      /* Border */
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="USA_states.js"></script>
+
+</head>
+
+<body>
+  <div id="map"></div>
+</body>
+
+<script>
+  var map = L.map('map').setView([36.639510, -105.078148], 4);
+
+  var osm = L.tileLayer('https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=j44CDnWpdQElQVPjWTS8', {
+    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+  }).addTo(map);
+
+  var satellite = L.tileLayer('https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=j44CDnWpdQElQVPjWTS8', {
+    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+  });
+
+  var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  });
+
+
+  //leaflet layer control
+  var baseMaps = {
+    'Open Street Map': osm,
+    'Satellite': satellite,
+    'Open Topo Map': OpenTopoMap,
+  }
+
+  L.control.layers(baseMaps).addTo(map);
+
+  var polygon = L.geoJSON(USA_states).addTo(map).bindPopup(function (e) {
+    var a = e.feature.properties.State_Name;
+    return "State Name : " + a.toString();
+  });
+
+</script>
+
+</html>
